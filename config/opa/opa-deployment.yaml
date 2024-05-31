@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opa
+  namespace: opa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opa
+  template:
+    metadata:
+      labels:
+        app: opa
+    spec:
+      containers:
+        - name: opa
+          image: openpolicyagent/opa:edge
+          args:
+            - "run"
+            - "--server"
+            - "--log-level=info"
+            - "--ignore=.*"
+            - "/policy"
+            - "--disable-telemetry"
+            - "--addr=localhost:8181"
+          volumeMounts:
+            - mountPath: /policy
+              name: opa-policy
+              readOnly: true
+            - mountPath: /config
+              name: opa-config
+          ports:
+            - name: http
+              containerPort: 8181
+      volumes:
+        - name: opa-config
+          configMap:
+            name: opa-config
+        - name: opa-policy
+          configMap:
+            name: opa-policy

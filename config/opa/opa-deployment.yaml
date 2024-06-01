@@ -23,7 +23,6 @@ spec:
             - "--ignore=.*"
             - "/policy"
             - "--disable-telemetry"
-            - "--addr=localhost:8181"
           volumeMounts:
             - mountPath: /policy
               name: opa-policy
